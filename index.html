@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visualize Your Data - Seamless Version Control & Deployment</title>
+    <title>Blockchain Analytics: Visualize Your Data - Seamless Version Control & Deployment</title>
     <meta name="description" content="Blockchain Analytics provides advanced Blockchain Analytics with seamless version control, CI/CD, and deployment integration for decentralized applications.">
     <!-- Favicon (Data Chart SVG) -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
@@ -258,7 +258,7 @@
             display: none; /* Hide line for the last item */
         }
 
-        /* New: Background animation for Advanced Analytics section */
+        /* Background animation for Advanced Analytics section */
         @keyframes data-flow {
             0% { background-position: 0% 0%; }
             100% { background-position: 100% 100%; }
@@ -426,9 +426,13 @@
         <section id="about" class="py-20 px-4 md:px-8 bg-gray-950 section-fade-in">
             <div class="container mx-auto max-w-4xl text-center">
                 <h2 class="text-4xl font-bold mb-8 neon-text delay-100">About Blockchain Analytics</h2>
-                <!-- Mission Statement -->
+                <!-- Company Description -->
                 <p class="text-gray-300 mb-12 text-lg leading-relaxed delay-200">
-                    Our mission at Blockchain Analytics is to empower innovators in the blockchain space by abstracting away the technical complexities of version control, CI/CD, and deployment. We believe that focusing on building groundbreaking decentralized applications should be your priority, while we handle the infrastructure.
+                    Blockchain Analytics LLC provides specialized blockchain analytics and infrastructure solutions for decentralized applications (dApps). Our services include comprehensive version control, Continuous Integration/Continuous Deployment (CI/CD), and robust deployment integration.
+                    <br><br>
+                    We utilize the ELK (Elasticsearch, Logstash, Kibana) stack to analyze on-chain data, logs, and performance metrics. This approach assists clients in improving technical SEO, understanding user engagement, ensuring system scalability, and maintaining security and compliance standards.
+                    <br><br>
+                    Our commitment to Infrastructure as Code (IaC) ensures that all our digital resources are managed through repeatable, auditable processes, contributing to consistent and reliable operations.
                 </p>
                 <!-- Team -->
                 <h3 class="text-3xl font-bold mb-8 neon-text delay-300">Our Expert Team</h3>
@@ -481,7 +485,7 @@
                 <div class="space-y-12">
                     <!-- Version Control Solutions -->
                     <div class="glass-panel p-10 rounded-xl shadow-lg delay-200">
-                        <h3 class="text-3xl font-bold text-[--tiffany-light-teal] mb-6">Version Control Solutions</h3>
+                        <h3 class="text-3xl font-bold text-[--tiffany-light-teal] neon-text mb-6">Version Control Solutions</h3>
                         <div class="grid md:grid-cols-2 gap-8">
                             <div class="text-left">
                                 <i class="fas fa-folder-open text-3xl text-[--tiffany-blue] mb-2"></i>
@@ -503,7 +507,7 @@
 
                     <!-- Deployment Services -->
                     <div class="glass-panel p-10 rounded-xl shadow-lg delay-300">
-                        <h3 class="text-3xl font-bold text-[--tiffany-blue] mb-6">Deployment Services</h3>
+                        <h3 class="text-3xl font-bold text-[--tiffany-blue] neon-text mb-6">Deployment Services</h3>
                         <div class="grid md:grid-cols-2 gap-8">
                             <div class="text-left">
                                 <i class="fas fa-paper-plane text-3xl text-[--tiffany-light-teal] mb-2"></i>
@@ -526,7 +530,7 @@
 
                     <!-- Consulting -->
                     <div class="glass-panel p-10 rounded-xl shadow-lg delay-400">
-                        <h3 class="text-3xl font-bold text-[--tiffany-light-gray-blue] mb-6">Consulting Services</h3>
+                        <h3 class="text-3xl font-bold text-[--tiffany-light-gray-blue] neon-text mb-6">Consulting Services</h3>
                         <p class="text-gray-300 mb-6">
                             Beyond standard services, we offer tailored consulting to meet the unique challenges of your blockchain project.
                         </p>
@@ -839,16 +843,12 @@
 
                     <div class="mt-8 text-center delay-300">
                         <p class="text-gray-300 mb-4">Or contact us directly:</p>
-                        <p class="text-lg text-white mb-2"><i class="fas fa-envelope text-[--tiffany-light-teal] mr-2"></i> info@blockchainanalytics.com</p>
-                        <p class="text-lg text-white mb-6"><i class="fas fa-phone text-[--tiffany-light-teal] mr-2"></i> +1 (123) 456-7890</p>
+                        <p class="text-lg text-white mb-2"><i class="fas fa-envelope text-[--tiffany-light-teal] mr-2"></i> info@blockchainanalytics.vercel.app</p>
 
                         <div class="flex justify-center space-x-6 mb-4">
                             <a href="#" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-[--tiffany-light-teal] transition-colors duration-300" aria-label="Follow us on LinkedIn" tabindex="0"><i class="fab fa-linkedin text-2xl"></i></a>
                             <a href="#" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-[--tiffany-light-teal] transition-colors duration-300" aria-label="Follow us on Twitter/X" tabindex="0"><i class="fab fa-twitter text-2xl"></i></a>
                         </div>
-                        <p class="text-gray-400 text-sm">
-                            <i class="fas fa-map-marker-alt text-[--tiffany-muted-grey] mr-2"></i> 123 Blockchain Ave, Crypto City, BC 98765
-                        </p>
                     </div>
                 </div>
             </div>
@@ -943,7 +943,7 @@
                     // Find all direct children of the target that have delay classes and add animation
                     Array.from(entry.target.children).forEach(child => {
                         Array.from(child.children).forEach(grandchild => {
-                            if (grandchild.classList.contains('delay-100') || grandchild.classList.contains('delay-200') || grandchild.classList.contains('delay-300') || grandchild.classList.contains('delay-400') || grandchild.classList.contains('delay-500') || grandchild.classList.contains('delay-600') || grandchild.classList.contains('delay-700') || grandchild.classList.contains('delay-800') || grandchild.classList.contains('delay-900') || grandchild.classList.contains('delay-1000')) {
+                            if (grandchild.classList.contains('delay-100') || grandchild.classList.contains('delay-200') || grandchild.classList.contains('delay-300') || grandchild.classList.contains('delay-400') || grandchild.classList.contains('delay-500') || grandchild.classList.contains('delay-600') || grandchild.classList.contains('delay-700')) {
                                 grandchild.classList.add('animate-fade-in');
                             }
                         });
@@ -955,24 +955,6 @@
 
         faders.forEach(fader => {
             appearOnScroll.observe(fader);
-        });
-
-        // --- Back to Top Button Logic ---
-        const backToTopButton = document.getElementById('back-to-top');
-
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 300) { // Show button after scrolling down 300px
-                backToTopButton.style.display = 'block';
-            } else {
-                backToTopButton.style.display = 'none';
-            }
-        });
-
-        backToTopButton.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
         });
 
         // --- Contact Form Submission Logic ---
