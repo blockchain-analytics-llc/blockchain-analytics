@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Blockchain Analytics | Institutional On-Chain Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #080a0c;
+    --off-black: #0d1014;
+    --surface: #111418;
+    --surface-2: #161b21;
+    --border: rgba(255,255,255,0.07);
+    --border-bright: rgba(255,255,255,0.14);
+    --accent: #00e5b0;
+    --accent-dim: rgba(0,229,176,0.12);
+    --accent-glow: rgba(0,229,176,0.06);
+    --text-primary: #f0f4f8;
+    --text-secondary: #8a9bb0;
+    --text-tertiary: #4a5568;
+    --danger: #ff4d6d;
+    --warning: #f59e0b;
+    --mono: 'DM Mono', monospace;
+    --display: 'Syne', sans-serif;
+    --body: 'DM Sans', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--black);
+    color: var(--text-primary);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* ─── Grid scanline overlay ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,176,0.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,176,0.018) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2.5rem;
+    height: 64px;
+    background: rgba(8,10,12,0.88);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-cta {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  .nav-cta:hover { background: var(--accent); color: var(--black); }
+
+  /* ─── HERO ─── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 2.5rem 80px;
+    overflow: hidden;
+  }
+  .hero-bg-circle {
+    position: absolute;
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,229,176,0.06) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 32px; height: 1px;
+    background: var(--accent);
+  }
+  .hero h1 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    max-width: 900px;
+    margin-bottom: 2rem;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+  .hero-sub {
+    font-size: 17px;
+    color: var(--text-secondary);
+    max-width: 520px;
+    line-height: 1.75;
+    margin-bottom: 3rem;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .btn-primary {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 14px 32px;
+    background: var(--accent);
+    color: var(--black);
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-ghost {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 14px 32px;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border: 1px solid var(--border-bright);
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .btn-ghost:hover { color: var(--text-primary); border-color: rgba(255,255,255,0.3); }
+
+  /* ─── TELEMETRY BAR ─── */
+  .telemetry-bar {
+    position: relative;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2.5rem;
+    overflow: hidden;
+  }
+  .tele-inner {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: stretch;
+    gap: 0;
+  }
+  .tele-live {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 2rem 20px 0;
+    border-right: 1px solid var(--border);
+  }
+  .live-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse-dot 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+  }
+  .tele-live span {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .tele-metrics {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 0 2rem;
+    overflow: hidden;
+  }
+  .tele-metric {
+    display: flex;
+    flex-direction: column;
+    padding: 16px 2rem;
+    border-right: 1px solid var(--border);
+    min-width: 120px;
+  }
+  .tele-metric:last-child { border-right: none; }
+  .tele-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 4px;
+  }
+  .tele-value {
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+  .tele-value.accent { color: var(--accent); }
+  .tele-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 0 20px 2rem;
+    border-left: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  /* ─── SECTION LAYOUT ─── */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 100px 2.5rem;
+  }
+  .section-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.25rem;
+  }
+  .section-sub {
+    font-size: 16px;
+    color: var(--text-secondary);
+    max-width: 560px;
+    line-height: 1.75;
+  }
+  .section-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: end;
+    margin-bottom: 4rem;
+  }
+
+  /* ─── PILLARS ─── */
+  .pillars { background: var(--off-black); }
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 4rem;
+  }
+  .pillar-card {
+    background: var(--off-black);
+    padding: 3rem 2.5rem;
+    position: relative;
+    transition: background 0.3s;
+  }
+  .pillar-card:hover { background: var(--surface); }
+  .pillar-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--text-tertiary);
+    margin-bottom: 2rem;
+  }
+  .pillar-icon {
+    width: 48px; height: 48px;
+    border: 1px solid var(--border-bright);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+  .pillar-icon svg { width: 22px; height: 22px; stroke: var(--accent); fill: none; stroke-width: 1.5; }
+  .pillar-title {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.3rem;
+    letter-spacing: -0.01em;
+    margin-bottom: 1rem;
+  }
+  .pillar-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+  .pillar-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border: 1px solid var(--border-bright);
+    color: var(--text-tertiary);
+  }
+
+  /* ─── SECTORS ─── */
+  .sectors-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 4rem;
+  }
+  .sector-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 2.5rem 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .sector-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    transform-origin: left;
+  }
+  .sector-card:hover { border-color: var(--border-bright); }
+  .sector-card:hover::after { transform: scaleX(1); }
+  .sector-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 1.5rem;
+  }
+  .sector-title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: -0.01em;
+    margin-bottom: 1rem;
+  }
+  .sector-desc {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+
+  /* ─── TECH STACK ─── */
+  .stack { background: var(--off-black); }
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 4rem;
+  }
+  .stack-item {
+    background: var(--off-black);
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transition: background 0.3s;
+  }
+  .stack-item:hover { background: var(--surface); }
+  .stack-name {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  .stack-role {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+  }
+
+  /* ─── CASE STUDIES ─── */
+  .cases-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 4rem;
+  }
+  .case-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .case-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 2px; height: 100%;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .case-card:hover::before { opacity: 1; }
+  .case-sector {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  .case-title {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    line-height: 1.3;
+    margin-bottom: 1rem;
+    letter-spacing: -0.01em;
+  }
+  .case-desc {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+  .case-metrics {
+    display: flex;
+    gap: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .case-metric {}
+  .case-metric-val {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .case-metric-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+  }
+
+  /* ─── ROADMAP ─── */
+  .roadmap { background: var(--off-black); }
+  .roadmap-list {
+    margin-top: 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--border);
+  }
+  .roadmap-item {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .roadmap-item:last-child { border-bottom: none; }
+  .roadmap-quarter {
+    padding: 2rem 2.5rem;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+  }
+  .roadmap-q {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+  .roadmap-status {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    display: inline-block;
+    width: fit-content;
+  }
+  .status-live { background: rgba(0,229,176,0.12); color: var(--accent); }
+  .status-active { background: rgba(245,158,11,0.12); color: var(--warning); }
+  .status-building { background: rgba(99,179,237,0.1); color: #63b3ed; }
+  .status-planned { background: rgba(138,155,176,0.1); color: var(--text-secondary); }
+  .roadmap-content {
+    padding: 2rem 2.5rem;
+    background: var(--off-black);
+    transition: background 0.25s;
+  }
+  .roadmap-item:hover .roadmap-content { background: var(--surface); }
+  .roadmap-title {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+  }
+  .roadmap-desc {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+
+  /* ─── API ─── */
+  .api-section { background: var(--black); }
+  .api-grid {
+    margin-top: 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .api-group {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .api-group-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+  }
+  .api-endpoint {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+  .api-endpoint:last-child { border-bottom: none; }
+  .api-endpoint:hover { background: var(--surface-2); }
+  .api-method {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    font-weight: 500;
+    padding: 3px 7px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .method-get { background: rgba(0,229,176,0.1); color: var(--accent); }
+  .method-post { background: rgba(245,158,11,0.1); color: var(--warning); }
+  .api-path {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+  }
+  .api-desc {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    line-height: 1.5;
+  }
+  .api-sandbox {
+    margin-top: 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .sandbox-info {}
+  .sandbox-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 4px;
+  }
+  .sandbox-val {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--text-primary);
+  }
+
+  /* ─── COMPLIANCE ─── */
+  .compliance { background: var(--off-black); }
+  .compliance-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 4rem;
+  }
+  .compliance-item {
+    background: var(--off-black);
+    padding: 2.5rem 2rem;
+    transition: background 0.3s;
+  }
+  .compliance-item:hover { background: var(--surface); }
+  .compliance-icon {
+    width: 40px; height: 40px;
+    border: 1px solid var(--border-bright);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+  .compliance-icon svg { width: 18px; height: 18px; stroke: var(--accent); fill: none; stroke-width: 1.5; }
+  .compliance-title {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
+  }
+  .compliance-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  /* ─── CTA ─── */
+  .cta-section {
+    background: var(--black);
+    text-align: center;
+    padding: 120px 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,229,176,0.07) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  .cta-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+  }
+  .cta-title {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+  }
+  .cta-sub {
+    font-size: 16px;
+    color: var(--text-secondary);
+    max-width: 480px;
+    margin: 0 auto 3rem;
+    line-height: 1.75;
+  }
+  .cta-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--off-black);
+    border-top: 1px solid var(--border);
+    padding: 2rem 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-logo {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .footer-copy {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--text-tertiary);
+  }
+  .footer-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+  }
+  .footer-links a {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--accent); }
+
+  /* ─── TICKER ─── */
+  .ticker-wrap {
+    overflow: hidden;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    padding: 12px 0;
+  }
+  .ticker {
+    display: flex;
+    gap: 4rem;
+    animation: ticker-scroll 30s linear infinite;
+    width: max-content;
+  }
+  @keyframes ticker-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  .ticker-item {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+  }
+  .ticker-item span { color: var(--accent); }
+
+  /* ─── ANIMATED COUNTER ─── */
+  @keyframes count-up {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .tele-value { animation: count-up 0.8s ease forwards; }
+
+  /* ─── SCROLL FADE IN ─── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (max-width: 900px) {
+    .pillars-grid, .sectors-grid, .stack-grid, .compliance-grid { grid-template-columns: 1fr; }
+    .cases-grid, .api-grid { grid-template-columns: 1fr; }
+    .section-header { grid-template-columns: 1fr; gap: 1.5rem; }
+    nav .nav-links { display: none; }
+    .tele-metrics { display: none; }
+    .hero h1 { font-size: 2.8rem; }
+    .roadmap-item { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Blockchain Analytics</div>
+  <ul class="nav-links">
+    <li><a href="#pillars">Solutions</a></li>
+    <li><a href="#sectors">Sectors</a></li>
+    <li><a href="#cases">Case Studies</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#api">API</a></li>
+    <li><a href="#compliance">Compliance</a></li>
+  </ul>
+  <button class="nav-cta">Request Demo</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-circle"></div>
+  <div class="hero-eyebrow">Institutional On-Chain Intelligence</div>
+  <h1>
+    Turn Raw<br>
+    Chain Data<br>
+    Into <em>Actionable</em><br>
+    Intelligence.
+  </h1>
+  <p class="hero-sub">Specialized infrastructure and modular analytics for decentralized applications. We transform raw on-chain telemetry into verifiable institutional power — built on Next.js 16, Hypersync, and ClickHouse.</p>
+  <div class="hero-actions">
+    <button class="btn-primary">View Case Studies</button>
+    <button class="btn-ghost">Explore the API →</button>
+  </div>
+</section>
+
+<!-- TELEMETRY BAR -->
+<div class="telemetry-bar">
+  <div class="tele-inner">
+    <div class="tele-live">
+      <div class="live-dot"></div>
+      <span>Live Network Telemetry</span>
+    </div>
+    <div class="tele-metrics">
+      <div class="tele-metric">
+        <div class="tele-label">Latency</div>
+        <div class="tele-value accent" id="latency">11ms</div>
+      </div>
+      <div class="tele-metric">
+        <div class="tele-label">Uptime</div>
+        <div class="tele-value">99.99%</div>
+      </div>
+      <div class="tele-metric">
+        <div class="tele-label">TPS Indexed</div>
+        <div class="tele-value" id="tps">403k+</div>
+      </div>
+      <div class="tele-metric">
+        <div class="tele-label">Wallets Tracked</div>
+        <div class="tele-value" id="wallets">2.1M</div>
+      </div>
+      <div class="tele-metric">
+        <div class="tele-label">Last Block</div>
+        <div class="tele-value" id="block">#21,847,332</div>
+      </div>
+      <div class="tele-metric">
+        <div class="tele-label">Data Engine</div>
+        <div class="tele-value" style="font-size:12px;">ClickHouse v24</div>
+      </div>
+    </div>
+    <div class="tele-status">
+      <div class="live-dot"></div>
+      All Systems Operational
+    </div>
+  </div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker" id="ticker">
+    <div class="ticker-item">AML Screening <span>Active</span></div>
+    <div class="ticker-item">OFAC SDN List <span>Synced</span></div>
+    <div class="ticker-item">Indexer <span>Hypersync // Rust</span></div>
+    <div class="ticker-item">Compliance <span>FATF // EU AI Act</span></div>
+    <div class="ticker-item">Data Residency <span>EU / US / APAC</span></div>
+    <div class="ticker-item">ML Models <span>PyTorch</span></div>
+    <div class="ticker-item">Wallet Clustering <span>Live</span></div>
+    <div class="ticker-item">Cross-Chain <span>6+ Chains</span></div>
+    <div class="ticker-item">AML Screening <span>Active</span></div>
+    <div class="ticker-item">OFAC SDN List <span>Synced</span></div>
+    <div class="ticker-item">Indexer <span>Hypersync // Rust</span></div>
+    <div class="ticker-item">Compliance <span>FATF // EU AI Act</span></div>
+    <div class="ticker-item">Data Residency <span>EU / US / APAC</span></div>
+    <div class="ticker-item">ML Models <span>PyTorch</span></div>
+    <div class="ticker-item">Wallet Clustering <span>Live</span></div>
+    <div class="ticker-item">Cross-Chain <span>6+ Chains</span></div>
+  </div>
+</div>
+
+<!-- PILLARS -->
+<section class="pillars" id="pillars">
+  <div class="section-header fade-in">
+    <div>
+      <div class="section-tag">01 // Core Systems</div>
+      <h2 class="section-title">What We Build</h2>
+    </div>
+    <p class="section-sub">Three distinct pillars — each engineered for the institutional demands of decentralized finance, law enforcement, and venture capital.</p>
+  </div>
+  <div class="pillars-grid fade-in">
+    <div class="pillar-card">
+      <div class="pillar-num">01 // Infrastructure</div>
+      <div class="pillar-icon">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      </div>
+      <div class="pillar-title">DevOps of Decentralization</div>
+      <p class="pillar-desc">Repeatable, auditable processes through Infrastructure-as-Code. Consistent, high-frequency operations for dApp ecosystems at any scale.</p>
+      <div class="pillar-tags">
+        <span class="tag">Terraform</span>
+        <span class="tag">CI/CD</span>
+        <span class="tag">IaC</span>
+      </div>
+    </div>
+    <div class="pillar-card">
+      <div class="pillar-num">02 // Analytics</div>
+      <div class="pillar-icon">
+        <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 12l4-4 4 4 4-4"/></svg>
+      </div>
+      <div class="pillar-title">Agentic Market Intelligence</div>
+      <p class="pillar-desc">Machine learning transforms raw on-chain telemetry into actionable insight — whale movements, liquidity shifts, protocol health, and AML screening.</p>
+      <div class="pillar-tags">
+        <span class="tag">Wallet Clustering</span>
+        <span class="tag">AML</span>
+        <span class="tag">Real-Time</span>
+      </div>
+    </div>
+    <div class="pillar-card">
+      <div class="pillar-num">03 // Compliance</div>
+      <div class="pillar-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div class="pillar-title">Sanctions & AML Screening</div>
+      <p class="pillar-desc">Full OFAC, FATF, and global regulatory alignment. Immutable audit trails for every flagged entity — built for law enforcement and institutional due diligence.</p>
+      <div class="pillar-tags">
+        <span class="tag">OFAC</span>
+        <span class="tag">FATF</span>
+        <span class="tag">Audit Trail</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTORS -->
+<section id="sectors" style="background: var(--black);">
+  <div class="section-header fade-in">
+    <div>
+      <div class="section-tag">02 // Industry Solutions</div>
+      <h2 class="section-title">Built for Your Sector</h2>
+    </div>
+    <p class="section-sub">Dedicated analytics frameworks for the specific intelligence needs of DeFi protocols, law enforcement agencies, and institutional venture capital.</p>
+  </div>
+  <div class="sectors-grid fade-in">
+    <div class="sector-card">
+      <div class="sector-label">Sector // DeFi Protocols</div>
+      <div class="sector-title">Protocol Health & Risk</div>
+      <p class="sector-desc">Real-time liquidity monitoring, smart contract anomaly detection, and TVL tracking. Identify systemic risk before it propagates through your ecosystem.</p>
+      <div class="pillar-tags">
+        <span class="tag">Liquidity</span>
+        <span class="tag">TVL</span>
+        <span class="tag">Anomaly Detection</span>
+      </div>
+    </div>
+    <div class="sector-card">
+      <div class="sector-label">Sector // Law Enforcement</div>
+      <div class="sector-title">Forensic Chain Analysis</div>
+      <p class="sector-desc">Wallet clustering, entity resolution, and transaction graph tracing. Court-admissible audit trails that connect on-chain activity to real-world identities.</p>
+      <div class="pillar-tags">
+        <span class="tag">Forensics</span>
+        <span class="tag">OFAC</span>
+        <span class="tag">Entity Resolution</span>
+      </div>
+    </div>
+    <div class="sector-card">
+      <div class="sector-label">Sector // Venture Capital</div>
+      <div class="sector-title">Protocol Due Diligence</div>
+      <p class="sector-desc">Deep on-chain diligence before deployment. Token distribution analysis, wallet concentration risk, and historical behavior profiling for pre-investment clarity.</p>
+      <div class="pillar-tags">
+        <span class="tag">Due Diligence</span>
+        <span class="tag">Token Analysis</span>
+        <span class="tag">Risk Scoring</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section class="stack" id="stack">
+  <div class="section-header fade-in">
+    <div>
+      <div class="section-tag">03 // Infrastructure</div>
+      <h2 class="section-title">Tech Stack</h2>
+    </div>
+    <p class="section-sub">Every layer purpose-built for real-time institutional workloads at scale.</p>
+  </div>
+  <div class="stack-grid fade-in">
+    <div class="stack-item">
+      <div class="stack-name">Next.js 16</div>
+      <div class="stack-role">Frontend // SSR</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-name">Hypersync</div>
+      <div class="stack-role">Indexer // 400k TPS</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-name">ClickHouse</div>
+      <div class="stack-role">Analytics DB</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-name">PyTorch</div>
+      <div class="stack-role">ML Models</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-name">Terraform</div>
+      <div class="stack-role">IaC // CI/CD</div>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDIES -->
+<section id="cases" style="background: var(--black);">
+  <div class="section-header fade-in">
+    <div>
+      <div class="section-tag">04 // Outcomes</div>
+      <h2 class="section-title">Case Studies</h2>
+    </div>
+    <p class="section-sub">How institutional intelligence has directed capital, flagged bad actors, and protected protocol integrity across live deployments.</p>
+  </div>
+  <div class="cases-grid fade-in">
+    <div class="case-card">
+      <div class="case-sector">DeFi Protocol</div>
+      <div class="case-title">Liquidity Pool Anomaly Detection Prevents $4.2M Exploit</div>
+      <p class="case-desc">Real-time wallet clustering identified coordinated manipulation across 14 wallets in a mid-cap liquidity pool. Alert triggered 8 minutes before the attack window, enabling the protocol team to pause contracts.</p>
+      <div class="case-metrics">
+        <div class="case-metric">
+          <div class="case-metric-val">$4.2M</div>
+          <div class="case-metric-label">Funds Protected</div>
+        </div>
+        <div class="case-metric">
+          <div class="case-metric-val">8min</div>
+          <div class="case-metric-label">Lead Time</div>
+        </div>
+      </div>
+    </div>
+    <div class="case-card">
+      <div class="case-sector">Law Enforcement</div>
+      <div class="case-title">Cross-Chain Entity Resolution Surfaces Sanctions Breach</div>
+      <p class="case-desc">AML screening identified OFAC-listed entity activity obfuscated across 6 chains and 40+ intermediary wallets. Forensic chain analysis produced court-ready documentation within 72 hours.</p>
+      <div class="case-metrics">
+        <div class="case-metric">
+          <div class="case-metric-val">6</div>
+          <div class="case-metric-label">Chains Traced</div>
+        </div>
+        <div class="case-metric">
+          <div class="case-metric-val">72hrs</div>
+          <div class="case-metric-label">To Documentation</div>
+        </div>
+      </div>
+    </div>
+    <div class="case-card">
+      <div class="case-sector">Venture Capital</div>
+      <div class="case-title">Pre-Investment Diligence Reveals Token Concentration Risk</div>
+      <p class="case-desc">On-chain analysis of a Series A target revealed that 78% of token supply was held by 3 wallets linked to project insiders — preventing an $8M deployment into a structurally compromised position.</p>
+      <div class="case-metrics">
+        <div class="case-metric">
+          <div class="case-metric-val">$8M</div>
+          <div class="case-metric-label">Capital Preserved</div>
+        </div>
+        <div class="case-metric">
+          <div class="case-metric-val">78%</div>
+          <div class="case-metric-label">Concentration Flagged</div>
+        </div>
+      </div>
+    </div>
+    <div class="case-card">
+      <div class="case-sector">DeFi Protocol</div>
+      <div class="case-title">Protocol Health Monitoring Improves DAO Governance Outcomes</div>
+      <p class="case-desc">Continuous on-chain telemetry gave a top-20 DeFi DAO real-time visibility into voter wallet behavior and delegation patterns, surfacing coordinated governance attacks before they reached quorum.</p>
+      <div class="case-metrics">
+        <div class="case-metric">
+          <div class="case-metric-val">3</div>
+          <div class="case-metric-label">Attacks Surfaced</div>
+        </div>
+        <div class="case-metric">
+          <div class="case-metric-val">Live</div>
+          <div class="case-metric-label">Monitoring</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section class="roadmap" id="roadmap">
+  <div class="section-header fade-in">
+    <div>
+      <div class="section-tag">05 // Product Roadmap</div>
+      <h2 class="section-title">Where We're Going</h2>
+    </div>
+    <p class="section-sub">A 24-month trajectory — from live infrastructure to full institutional API and compliance suite.</p>
+  </div>
+  <div class="roadmap-list fade-in">
+    <div class="roadmap-item">
+      <div class="roadmap-quarter">
+        <div class="roadmap-q">Q4 2025</div>
+        <div class="roadmap-status status-live">Live</div>
+      </div>
+      <div class="roadmap-content">
+        <div class="roadmap-title">Core Infrastructure Launch</div>
+        <p class="roadmap-desc">Hypersync indexer deployed, ClickHouse cluster online, Next.js 16 frontend live. AML screening and OFAC watchlist integration complete.</p>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-quarter">
+        <div class="roadmap-q">Q1 2026</div>
+        <div class="roadmap-status status-active">Active</div>
+      </div>
+      <div class="roadmap-content">
+        <div class="roadmap-title">Agentic Intelligence Layer</div>
+        <p class="roadmap-desc">PyTorch wallet clustering model in production. Real-time anomaly detection active. Bittensor decentralized ML integration in staging.</p>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-quarter">
+        <div class="roadmap-q">Q2 2026</div>
+        <div class="roadmap-status status-building">Building</div>
+      </div>
+      <div class="roadmap-content">
+        <div class="roadmap-title">Public API + Developer Portal</div>
+        <p class="roadmap-desc">OpenAPI / Swagger documentation release. Gated API key system. SDKs for Python and TypeScript. Rate-limited sandbox environment.</p>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-quarter">
+        <div class="roadmap-q">Q3 2026</div>
+        <div class="roadmap-status status-planned">Planned</div>
+      </div>
+      <div class="roadmap-content">
+        <div class="roadmap-title">Sector-Specific Dashboards</div>
+        <p class="roadmap-desc">Dedicated portal views for DeFi, Law Enforcement, and VC use cases. Custom alerting, report generation, and white-label options.</p>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-quarter">
+        <div class="roadmap-q">Q4 2026</div>
+        <div class="roadmap-status status-planned">Planned</div>
+      </div>
+      <div class="roadmap-content">
+        <div class="roadmap-title">Compliance Transparency Suite</div>
+        <p class="roadmap-desc">Full EU AI Act audit trail export, FATF Travel Rule integration, and third-party compliance certification publication.</p>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-quarter">
+        <div class="roadmap-q">2027</div>
+        <div class="roadmap-status status-planned">Planned</div>
+      </div>
+      <div class="roadmap-content">
+        <div class="roadmap-title">Cross-Chain Intelligence Mesh</div>
+        <p class="roadmap-desc">Unified entity graph spanning 20+ EVM and non-EVM chains. Real-time cross-chain wallet fingerprinting and risk propagation modeling.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- API -->
+<section class="api-section" id="api">
+  <div class="section-header fade-in">
+    <div>
+      <div class="section-tag">06 // Developer Documentation</div>
+      <h2 class="section-title">API Reference</h2>
+    </div>
+    <p class="section-sub">Public endpoints for on-chain intelligence. Request an API key to access production data. A sandbox environment is available without authentication.</p>
+  </div>
+  <div class="api-grid fade-in">
+    <div class="api-group">
+      <div class="api-group-header">Wallet Intelligence</div>
+      <div class="api-endpoint">
+        <div class="api-method method-get">GET</div>
+        <div>
+          <div class="api-path">/v1/wallet/{address}/profile</div>
+          <div class="api-desc">Entity classification, risk score, and cluster membership for a wallet address.</div>
+        </div>
+      </div>
+      <div class="api-endpoint">
+        <div class="api-method method-get">GET</div>
+        <div>
+          <div class="api-path">/v1/wallet/{address}/transactions</div>
+          <div class="api-desc">Paginated transaction history with on-chain annotations and AML flags.</div>
+        </div>
+      </div>
+      <div class="api-endpoint">
+        <div class="api-method method-post">POST</div>
+        <div>
+          <div class="api-path">/v1/wallet/batch-screen</div>
+          <div class="api-desc">Batch AML and OFAC screening for up to 500 addresses per request.</div>
+        </div>
+      </div>
+    </div>
+    <div class="api-group">
+      <div class="api-group-header">Protocol Analytics</div>
+      <div class="api-endpoint">
+        <div class="api-method method-get">GET</div>
+        <div>
+          <div class="api-path">/v1/protocol/{id}/health</div>
+          <div class="api-desc">Real-time protocol health score, TVL, and active anomaly alerts.</div>
+        </div>
+      </div>
+      <div class="api-endpoint">
+        <div class="api-method method-get">GET</div>
+        <div>
+          <div class="api-path">/v1/protocol/{id}/liquidity</div>
+          <div class="api-desc">Liquidity pool depth, composition, and 30-day concentration metrics.</div>
+        </div>
+      </div>
+      <div class="api-endpoint">
+        <div class="api-method method-post">POST</div>
+        <div>
+          <div class="api-path">/v1/intelligence/query</div>
+          <div class="api-desc">Natural language query interface to the agentic analytics engine. Beta access only.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="api-sandbox fade-in">
+    <div class="sandbox-info">
+      <div class="sandbox-label">Sandbox Environment</div>
+      <div class="sandbox-val">No API key required · Rate-limited 100 req/hr · Anonymized production data</div>
+    </div>
+    <button class="btn-primary">Request API Key</button>
+  </div>
+</section>
+
+<!-- COMPLIANCE -->
+<section class="compliance" id="compliance">
+  <div class="section-header fade-in">
+    <div>
+      <div class="section-tag">07 // Compliance Transparency</div>
+      <h2 class="section-title">Regulatory Standards</h2>
+    </div>
+    <p class="section-sub">A dedicated overview of how the platform meets global regulatory requirements — from OFAC sanctions to EU AI Act auditability.</p>
+  </div>
+  <div class="compliance-grid fade-in">
+    <div class="compliance-item">
+      <div class="compliance-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      </div>
+      <div class="compliance-title">OFAC Sanctions Screening</div>
+      <p class="compliance-desc">Every wallet query is screened against the current OFAC SDN list in real time. Matches are flagged with confidence scores and supporting transaction evidence.</p>
+    </div>
+    <div class="compliance-item">
+      <div class="compliance-icon">
+        <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9S3 16.97 3 12 7.03 3 12 3s9 4.03 9 9z"/></svg>
+      </div>
+      <div class="compliance-title">FATF Travel Rule</div>
+      <p class="compliance-desc">Infrastructure supports FATF Travel Rule compliance for VASPs — originator and beneficiary identification is structurally embedded into data pipelines.</p>
+    </div>
+    <div class="compliance-item">
+      <div class="compliance-icon">
+        <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><circle cx="9" cy="15" r="1"/><circle cx="14" cy="10" r="1"/><circle cx="19" cy="6" r="1"/></svg>
+      </div>
+      <div class="compliance-title">AML Monitoring</div>
+      <p class="compliance-desc">Continuous anti-money laundering pattern detection across indexed chains. Layering, structuring, and mixing behaviors flagged within the 12ms latency window.</p>
+    </div>
+    <div class="compliance-item">
+      <div class="compliance-icon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+      </div>
+      <div class="compliance-title">EU AI Act Alignment</div>
+      <p class="compliance-desc">All ML-driven decisions carry immutable audit logs compatible with EU AI Act Article 13 transparency requirements. Exportable in structured JSON or PDF formats.</p>
+    </div>
+    <div class="compliance-item">
+      <div class="compliance-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <div class="compliance-title">Immutable Audit Trails</div>
+      <p class="compliance-desc">Every entity flag, alert, and data query is time-stamped and cryptographically signed. Court-admissible documentation available on request for law enforcement.</p>
+    </div>
+    <div class="compliance-item">
+      <div class="compliance-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      </div>
+      <div class="compliance-title">Data Residency</div>
+      <p class="compliance-desc">ClickHouse clusters are deployed with configurable data residency for EU, US, and APAC jurisdictions. No cross-border data movement without explicit client consent.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-label">Ready to audit your protocol?</div>
+  <h2 class="cta-title">Intelligence you can<br>act on. Today.</h2>
+  <p class="cta-sub">Request a sample intelligence report or schedule a demo. We'll run a live scan on any EVM-compatible address and return a full risk profile within 24 hours.</p>
+  <div class="cta-actions">
+    <button class="btn-primary">Request a Sample Report</button>
+    <button class="btn-ghost">Audit My Protocol →</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Blockchain Analytics</div>
+  <div class="footer-copy">© 2026 Blockchain Analytics LLC // Secure On-Chain Operations</div>
+  <ul class="footer-links">
+    <li><a href="#">Compliance</a></li>
+    <li><a href="#">Privacy</a></li>
+    <li><a href="#">Terms</a></li>
+    <li><a href="https://www.linkedin.com/company/blockchain-analytics-space" target="_blank">LinkedIn</a></li>
+    <li><a href="https://github.com/Blockchain-Analytics-Space" target="_blank">GitHub</a></li>
+  </ul>
+</footer>
+
+<script>
+  // Scroll fade-in
+  const faders = document.querySelectorAll('.fade-in');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  faders.forEach(f => observer.observe(f));
+
+  // Live block number counter
+  let blockNum = 21847332;
+  setInterval(() => {
+    blockNum += Math.floor(Math.random() * 3) + 1;
+    document.getElementById('block').textContent = '#' + blockNum.toLocaleString();
+  }, 2800);
+
+  // Latency jitter
+  setInterval(() => {
+    const lat = 9 + Math.floor(Math.random() * 6);
+    document.getElementById('latency').textContent = lat + 'ms';
+  }, 1500);
+
+  // TPS counter
+  let tps = 403000;
+  setInterval(() => {
+    tps += Math.floor(Math.random() * 200) - 80;
+    document.getElementById('tps').textContent = (tps / 1000).toFixed(1) + 'k+';
+  }, 2000);
+</script>
+</body>
+</html>
